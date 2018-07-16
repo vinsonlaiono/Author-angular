@@ -34,7 +34,7 @@ app.listen(port, function () {
 
 mongoose.connect('mongodb://localhost/authors');
 var AuthorSchema = new mongoose.Schema({
-    name: { type: String, required: [true, "Name must contain at least 3 characters"], minlength: 1 },
+    name: { type: String, required: [true, "Name must contain at least 3 characters"], minlength: 3 },
 }, { timestamps: true });
 
 const Author = mongoose.model('Author', AuthorSchema)
@@ -65,7 +65,8 @@ app.post('/authors', (req, res) => {
     console.log(req.body)
     Author.create({name: req.body.name}, (err, author) => {
         if(err){
-            console.log("Error message", err)
+            console.log("Error message========== ", err.message.name)
+            res.json({errMessage: err.message})
         }else{
             res.json({message: "Successfully create a new author", author})
         }
@@ -76,9 +77,15 @@ app.put('/authors/:id/edit', (req, res) => {
     console.log("in edit route server.js======================")
     console.log("NAME: " , req.body.name)
     console.log("ID: " , req.params.id)
-    Author.findOneAndUpdate({_id: req.params.id}, {$set: {name: req.body.name}}, (err, author) =>{
-        res.json({message: "Author has been updated successfully", author: author})
-    })
+    let str = req.body.name
+    if (str.length < 3){
+        res.json({errMessage: "Name must be at least 3 characters"})
+    } else {
+        Author.findOneAndUpdate({_id: req.params.id}, {$set: {name: req.body.name}}, (err, author) =>{
+            res.json({message: "Author has been updated successfully", author: author})
+        })
+
+    }
 })
 
 app.delete('/authors/delete/:id', (req, res) => {
