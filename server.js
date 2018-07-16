@@ -72,12 +72,11 @@ app.post('/authors', (req, res) => {
     })
 })
 // edit route
-app.put('/authors/:id/edit', (res, req) => {
-    console.log("in edit route server.js")
+app.put('/authors/:id/edit', (req, res) => {
+    console.log("in edit route server.js======================")
     console.log("NAME: " , req.body.name)
     console.log("ID: " , req.params.id)
     Author.findOneAndUpdate({_id: req.params.id}, {$set: {name: req.body.name}}, (err, author) =>{
-
         res.json({message: "Author has been updated successfully", author: author})
     })
 })
