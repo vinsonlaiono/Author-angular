@@ -84,7 +84,6 @@ app.put('/authors/:id/edit', (req, res) => {
         Author.findOneAndUpdate({_id: req.params.id}, {$set: {name: req.body.name}}, (err, author) =>{
             res.json({message: "Author has been updated successfully", author: author})
         })
-
     }
 })
 
